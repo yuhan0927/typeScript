@@ -7,7 +7,6 @@ console.log(flag)
 //数组类型(array) ts中定义数组的两种方法
 
 //    1.第一种定义数组的方式
-
     // var arr:number[] = [11,22,33]
     // var arr:string[] = ['11','22','33']
 
@@ -161,6 +160,7 @@ console.log(flag)
     //     return sum
     // }
     // alert(sum(1,2,3,4)) //10
+
 
 // 函数的重载
     // java中方法的重载:重载指的是两个或者两个以上同名函数，但它们的参数不一样。这时会出现函数重载的情况
@@ -526,13 +526,12 @@ console.log(flag)
     // function getName(name:FullName){
     //     console.log(name)
     // }
-    // // 参数的顺序可以不一样
     // getName({
     //     firstName:'firstName'
     // })
 
 
-    // 函数类型接口：对方法传入 的参数以及返回值进行约束
+    // 函数类型接口：对方法传入的参数以及返回值进行约束
     // 加密的函数类型接口
     // interface encrypt{
     //     (key:string,value:string):string;
@@ -605,3 +604,193 @@ console.log(flag)
 // var w = new Web('小李');
 // w.eat();
 // w.coding() //小李coding
+
+
+
+// typescript中的泛型
+
+// 同时返回string和number类型(代码冗余)
+// function getData1(value:string):string{
+//     return value
+// }
+// function getData2(value:number):number{
+//     return value
+// }
+
+// function getData(value:any):any{
+//     return value
+// }
+// any放弃了类型检查。
+
+// 传入什么。返回什么。比如：传入number类型返回number类型
+// 泛型：可以支持不特定的数据类型  要求：传入的参数和返回的参数一致
+// T表示泛型
+// function getData<T>(value:T):T{
+//     return value
+// }
+// getData<number>(123)  //正确
+// getData<number>('123') //错误
+
+// function getData<T>(value:T):any{
+//     return '21235'
+// }
+// getData<number>(123) //参数必须是number
+// getData<string>('dhff')
+
+// 泛型类：比如有个最小堆算法，需要同时支持返回数字和字符串两种类型。通过类的泛型来实现
+    // class MinClass {
+    //     public list:number[] = [];
+    //     add(num:number){
+    //         this.list.push(num)
+    //     }
+        // min():number {
+        //     var minNum = this.list[0];
+        //     for(var i=0; i<this.list.length; i++){
+        //         if(minNum > this.list[i]){
+        //             minNum = this.list[i]
+        //         }
+        //     }
+        //     return minNum
+        // }
+    // }
+
+    // 类的泛型
+    // class MinClass<T>{
+    //     public list:T[] = [];
+    //     add(value:T):void{
+    //         this.list.push(value)
+    //     }
+    //     min():T {
+    //         var minNum = this.list[0];
+    //         for(var i=0; i<this.list.length; i++){
+    //             if(minNum > this.list[i]){
+    //                 minNum = this.list[i]
+    //             }
+    //         }
+    //         return minNum
+    //     }
+    // }
+    // var m1 = new MinClass<number>() //实例化类 并且指定了类的T代表的类型是number
+    // // m1.add("1")//错误
+    // m1.add(1)
+    // m1.add(2)
+    // m1.add(3)
+    // alert(m1.min())
+
+
+    // 泛型接口
+    // 函数类型接口
+    // interface ConfigFn{
+    //     (value1:string,value2:string):string;
+    // }
+    // var setData:ConfigFn=function(value1:string,value2:string):string{
+    //     return value1+value2
+    // }
+    // setData("name",'yh')
+    // 1泛型接口
+    // interface ConfigFn{
+    //     <T>(value1:T):T;
+    // }
+    // var getData:ConfigFn=function<T>(value:T):T{
+    //     return value
+    // }
+    // getData<string>('yh')
+    // 2泛型接口
+    // interface ConfigFn<T>{
+    //     (value1:T):T;
+    // }
+    // function getData<T>(value:T):T{
+    //     return value
+    // }
+    // var myGetData:ConfigFn<string> = getData;
+    // myGetData('20')
+    // myGetData(20)//错误
+
+    // 泛型类：泛型可以帮助我们避免重复的代码以及对不特定数据类型的支持（类型校验），下面我们看看吧类当作参数的泛型类
+    // 1.定义个类
+    // 2.把类作为参数来约束数据传入的类型
+    /**
+     * 定义一个User的类这个类的作用是映射数据库字段
+     * 然后定义一个MysqlDb的类用于操作数据库
+     * 然后把User类作为参数传入到MysqlDb中
+     * var user = new User({
+     *      username:'yh',
+     *      password:'123456
+     * })
+     * var Db = new MysqlDb();
+     * Db.add(user);
+     */
+    // class User{
+    //     username:string | undefined
+    //     password:string | undefined
+    // }
+    // class MysqlDb{
+    //     add(user:User):boolean{
+    //         console.log(user)
+    //         return true
+    //     }
+    // }
+    // var u = new User();
+    // u.username = 'yh'
+    // u.password = '123456'
+    // var Db = new MysqlDb();
+    // Db.add(u)
+
+    // class ArticleCate{
+    //     title:string | undefined
+    //     desc:string | undefined
+    //     status:number | undefined
+    // }
+    // class MysqlDb{
+    //     add(info:ArticleCate):boolean{
+    //         console.log(info)
+    //         return true
+    //     }
+    // }
+    // var a = new ArticleCate();
+    // a.title = 'yh'
+    // a.desc = '123456'
+    // a.status = 20
+    // var Db = new MysqlDb();
+    // Db.add(a)
+
+    // 操作数据库的泛型类
+    class MysqlDb<T>{
+        add(info:T):boolean{
+            console.log(info)
+            return true
+        }
+    }
+    // 想给User表增加一个数据
+    //1.定义一个User类和数据库进行映射
+    class User{
+        username:string | undefined
+        pasword:string | undefined
+    }
+    var u = new User();
+    u.username='yh';
+    u.pasword='12345'
+    var Db = new MysqlDb<User>()
+    Db.add(u)
+    // Db.add('123') //错误
+    // 2.定义一个ArticleCate类 和数据库进行映射
+    class ArticleCate{
+        title:string | undefined
+        desc:string | undefined
+        status:number | undefined
+        constructor(params:{
+            title:string | undefined
+            desc:string | undefined
+            status?:number | undefined
+        }){
+            this.title = params.title
+            this.desc = params.desc
+            this.status=params.status
+        }
+    }
+    var a = new ArticleCate({
+        title: 'f',
+        desc: '111'
+    });
+    var Db1 = new MysqlDb<ArticleCate>()
+    Db1.add(a)
